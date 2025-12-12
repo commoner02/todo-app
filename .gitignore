@@ -1,0 +1,71 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Node modules (root + nested)
+node_modules/
+**/node_modules/
+
+# Env files (do not commit secrets)
+.env
+.env.local
+.env.*.local
+/backend/.env
+/frontend/.env
+
+# Build / dev artifacts
+dist/
+build/
+frontend/dist/
+frontend/build/
+backend/dist/
+backend/build/
+.vite/
+.cache/
+
+# Bundlers & caches
+.nyc_output/
+coverage/
+coverage-final.json
+*.tgz
+*.cache
+
+# TypeScript
+*.tsbuildinfo
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+*.sublime-*
+
+# Misc
+*.pid
+*.seed
+*.lock
+*.tmp
+*.bak
+*~
+
+# OS swap files
+*.swp
+
+# Ignore secrets & keys
+*.pem
+*.key
+*.crt
+
+# If you have local DB or logs
+db/*.log
+logs/
