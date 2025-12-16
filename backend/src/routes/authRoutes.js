@@ -10,6 +10,10 @@ router.post("/register", async (req, res) => {
 
   const hashedPassword = bcrypt.hashSync(password, 8);
 
+  if (!username || !password) {
+    return res.json("username or password required");
+  }
+
   try {
     const [resultUser] = await db.execute(
       `INSERT INTO users (username, password) VALUES (?,?)`,
@@ -42,12 +46,18 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(username, password)
+
+  if (!username || !password) {
+    return res.json("username or password required");
+  }
+
   try {
     const [users] = await db.execute("SELECT * FROM users WHERE username = ?", [
       username,
     ]);
 
-    if (users.length === 0) res.send("use not found");
+    if (users.length === 0) res.send("user not found");
 
     const user = users[0];
 
