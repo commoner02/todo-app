@@ -29,6 +29,10 @@ function Dashboard() {
       console.error("Fetch error:", err);
     }
   };
+  
+  const logout = () => {
+        
+  }
 
   useEffect(() => {
     fetchTodos();
@@ -38,7 +42,7 @@ function Dashboard() {
     <div>
       <div className="flex justify-around p-4">
         <h1 className="text-2xl font-bold text-orange-700">ToDo.</h1>
-        <button className="border-2 p-1 text-red-600">Logout</button>
+        <button className="border-2 p-1 text-red-600" onClick={logout}  >Logout</button>
       </div>
       <div className="text-center">
         <h1 className="font-bold text-3xl p-2">Manage Your Todos</h1><hr />

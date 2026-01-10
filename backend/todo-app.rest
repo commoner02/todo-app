@@ -1,49 +1,61 @@
--- Active: 1760679553747@@127.0.0.1@3306@todo_app
-
-###register
+### Register
 POST http://localhost:5005/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Shuvo83",
-    "password": "pass123"
+    "username": "testuser01",
+    "password": "test123"
 }
 
-### login 
+### Login
 POST http://localhost:5005/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "Shuvo53",
-    "password": "pass123"
+    "username": "testuser01",
+    "password": "test123"
 }
 
+### Logout
+POST http://localhost:5005/auth/logout HTTP/1.1
+Content-Type: application/json 
 
-### get todos 
-GET http://localhost:5005/todos/ HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY1NTUyNDYyLCJleHAiOjE3NjU2Mzg4NjJ9.TYjcvq-XlbuzSUr-yqQSyjZrVP_ulNWKZEvGrX1wfDc
+{
+    "refreshToken": "00845f7cffa00741ef4a702227f45a40697677d2653e514bcc453d483b94573807e243c5841cfece0a80c9232089d240b43a5f6f88e5030c01a5dcc217a1e422"
 
+}
 
-### insert todos 
-POST http://localhost:5005/todos/ HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY1NTUyNDYyLCJleHAiOjE3NjU2Mzg4NjJ9.TYjcvq-XlbuzSUr-yqQSyjZrVP_ulNWKZEvGrX1wfDc
+### Refresh Token
+POST http://localhost:5005/auth/refresh HTTP/1.1
 Content-Type: application/json
 
 {
-    "todo": "complete creating todo"
+    "refreshToken": "8262e87699e44dc89e50e0fc665a35b614b8c490aad880722d9bf7f794f647536c5c674038dff8fe13b81babe07f03134c1e6eb576be490e9ce750e656736134"
 }
 
-### update todos 
+### Get Todos (with access token)
+GET http://localhost:5005/todos HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2ODAzNzAzMCwiZXhwIjoxNzY4MDM3OTMwfQ.LD6Ig0_CSpFc2xn4HH-Uv9L7bZdpOl7vRT3-hH7M87w
+
+### Create Todo
+POST http://localhost:5005/todos HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2ODAzNzAzMCwiZXhwIjoxNzY4MDM3OTMwfQ.LD6Ig0_CSpFc2xn4HH-Uv9L7bZdpOl7vRT3-hH7M87w
+Content-Type: application/json
+
+{
+    "todo": "Learn JWT authentication"
+}
+
+### Update Todo
 PUT http://localhost:5005/todos/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY1NTUyNDYyLCJleHAiOjE3NjU2Mzg4NjJ9.TYjcvq-XlbuzSUr-yqQSyjZrVP_ulNWKZEvGrX1wfDc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2ODAzNzAzMCwiZXhwIjoxNzY4MDM3OTMwfQ.LD6Ig0_CSpFc2xn4HH-Uv9L7bZdpOl7vRT3-hH7M87w
 Content-Type: application/json
 
 {
-    "todo": "complete creating todo-updated",
-    "completed": 1
+    "todo": "Learn JWT authentication - Updated",
+    "completed": true
 }
 
-
-### delete a todo 
-DELETE http://localhost:5005/todos/6 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzY1NTUyNDYyLCJleHAiOjE3NjU2Mzg4NjJ9.TYjcvq-XlbuzSUr-yqQSyjZrVP_ulNWKZEvGrX1wfDc
+### Delete Todo
+DELETE http://localhost:5005/todos/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc2ODAzNzAzMCwiZXhwIjoxNzY4MDM3OTMwfQ.LD6Ig0_CSpFc2xn4HH-Uv9L7bZdpOl7vRT3-hH7M87w

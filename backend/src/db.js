@@ -1,5 +1,4 @@
 import mysql from "mysql2/promise";
-import 'dotenv/config'
 
     const pool = mysql.createPool({
       host: process.env.db_host,
@@ -16,7 +15,7 @@ import 'dotenv/config'
       try {
         const connection = await pool.getConnection()
         connection.release()
-        console.log("MySQL connected to todo_app db (pool) ")
+        console.log("MySQL connected to todo_app_2 db (pool) ")
       } catch (error) {
         console.log(error.message)        
       }

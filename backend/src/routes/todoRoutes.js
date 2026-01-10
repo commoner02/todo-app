@@ -3,59 +3,87 @@ import db from "../db.js";
 
 const router = express.Router();
 
-//get todos
+// Get all todos for user
 router.get("/", async (req, res) => {
-  const [todos] = await db.execute("SELECT *FROM todos WHERE user_id = ?", [
-    req.userId,
-  ]);
-  console.log(todos);
-  res.json(todos);
+  try {
+    const [todos] = await db.execute(
+      "SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC",
+      [req.userId]
+    );
+    res.json(todos);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-//create new todo
+// Create new todo
 router.post("/", async (req, res) => {
-  const { todo } = req.body;
-  const [todos] = await db.execute(
-    "INSERT INTO todos (user_id, todo) VALUES (?, ?)",
-    [req.userId, todo]
-  );
-  res.json({ id: todos.insertId, userId: req.userId, todo, completed: 0 });
+  try {
+    const { todo } = req.body;
+    const [result] = await db.execute(
+      "INSERT INTO todos (user_id, todo) VALUES (?, ?)",
+      [req.userId, todo]
+    );
+    
+    const [newTodo] = await db.execute(
+      "SELECT * FROM todos WHERE id = ?",
+      [result.insertId]
+    );
+    
+    res.json(newTodo[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-//update a todo
+// Update a todo
 router.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { todo, completed } = req.body;
+  try {
+    const { id } = req.params;
+    const { todo, completed } = req.body;
 
-  console.log(todo, completed);
+    const [result] = await db.execute(
+      "UPDATE todos SET todo = ?, completed = ? WHERE id = ? AND user_id = ?",
+      [todo, completed, id, req.userId]
+    );
 
-  const [todos] = await db.execute(
-    "UPDATE todos SET todo = ?, completed = ? WHERE id = ? AND user_id = ?",
-    [todo, completed, id, req.userId]
-  );
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Todo not found" });
+    }
 
-  if (todos.affectedRows === 0) return res.send("todo not found");
-
-  res.json({
-    message: "todo updated",
-    id: id,
-    userId: req.userId,
-    todo,
-    completed: completed,
-  });
+    const [updatedTodo] = await db.execute(
+      "SELECT * FROM todos WHERE id = ?",
+      [id]
+    );
+    
+    res.json(updatedTodo[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-//delete a todo
+// Delete a todo
 router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const { id } = req.params;
-  const userId = req.userId;
+    const [result] = await db.execute(
+      "DELETE FROM todos WHERE id = ? AND user_id = ?", 
+      [id, req.userId]
+    );
 
-  const [todos] = await db.execute("DELETE FROM todos WHERE id = ? AND user_id = ?", [id, userId]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Todo not found" });
+    }
 
-  res.json({ message: "todo deleted with id", id: id });
-
+    res.json({ message: "Todo deleted successfully", id });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
 });
-
 
 export default router;
