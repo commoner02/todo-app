@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import db from "../db.js";
 
-const ACCESS_TOKEN_EXPIRY = "15m";
-const REFRESH_TOKEN_EXPIRY = 7*24*60*60; //7d
+const ACCESS_TOKEN_EXPIRY = 15 * 60; //15m
+const REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60; //7d
 
 const router = express.Router();
 
@@ -61,6 +61,16 @@ router.post("/register", async (req, res) => {
 
     const { accessToken, refreshToken } = await generateTokens(userId);
 
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: ACCESS_TOKEN_EXPIRY * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: REFRESH_TOKEN_EXPIRY * 1000,
+    });
+
     res.json({
       accessToken,
       refreshToken,
@@ -96,6 +106,16 @@ router.post("/login", async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateTokens(user.id);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      maxAge: ACCESS_TOKEN_EXPIRY * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: REFRESH_TOKEN_EXPIRY * 1000,
+    });
 
     res.json({
       accessToken,
@@ -135,6 +155,16 @@ router.post("/refresh", async (req, res) => {
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await generateTokens(tokenRecord.user_id);
 
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      maxAge: ACCESS_TOKEN_EXPIRY * 1000,
+    });
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      maxAge: REFRESH_TOKEN_EXPIRY * 1000,
+    });
+
     res.json({
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,
@@ -146,15 +176,23 @@ router.post("/refresh", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
-  const { refreshToken } = req.body;
+  try {
+    const refreshToken = req.cookies.refreshToken;
 
-  if (refreshToken) {
-    await db.execute("DELETE FROM refresh_tokens WHERE token = ?", [
-      refreshToken,
-    ]);
+    if (refreshToken) {
+      await db.execute("DELETE FROM refresh_tokens WHERE token = ?", [
+        refreshToken,
+      ]);
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    res.status(500).json({ error: "Server error" });
   }
-
-  res.json({ message: "Logged out successfully" });
 });
 
 export default router;

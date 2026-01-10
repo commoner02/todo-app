@@ -43,8 +43,9 @@ async function setupDB() {
     console.log("Database and Tables created!");
 
     await connection.end();
+
   } catch (error) {
-    console.log(error.message);
+    console.log("DB Setup Error:", error.message);
   }
 }
 

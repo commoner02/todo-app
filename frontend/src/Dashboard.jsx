@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+const API_BASE = import.meta.env.VITE_API_URL
+
 
 function Dashboard() {
   const [todos, setTodos] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await fetch(`${API_BASE}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    navigate('/auth');
+  }
 
   const fetchTodos = async () => {
     try {
@@ -9,6 +21,7 @@ function Dashboard() {
 
       const response = await fetch('/api/todos', {
         method: 'GET',
+        credentials: 'include',
         headers: {
           Authorization: token,
           'Content-Type': 'application/json'
@@ -29,20 +42,16 @@ function Dashboard() {
       console.error("Fetch error:", err);
     }
   };
-  
-  const logout = () => {
-        
-  }
 
   useEffect(() => {
     fetchTodos();
-  }, []); // Run once on mount
+  }, []);  //Run once on mount
 
   return (
     <div>
       <div className="flex justify-around p-4">
         <h1 className="text-2xl font-bold text-orange-700">ToDo.</h1>
-        <button className="border-2 p-1 text-red-600" onClick={logout}  >Logout</button>
+        <button onClick={handleLogout} className="border-2 p-1 text-red-600">Logout</button>
       </div>
       <div className="text-center">
         <h1 className="font-bold text-3xl p-2">Manage Your Todos</h1><hr />

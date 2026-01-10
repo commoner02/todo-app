@@ -10,12 +10,16 @@ router.get("/", async (req, res) => {
       "SELECT * FROM todos WHERE user_id = ? ORDER BY created_at DESC",
       [req.userId]
     );
+
     res.json(todos);
+
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
   }
+
 });
+
 
 // Create new todo
 router.post("/", async (req, res) => {
@@ -32,6 +36,7 @@ router.post("/", async (req, res) => {
     );
     
     res.json(newTodo[0]);
+
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
@@ -59,6 +64,7 @@ router.put("/:id", async (req, res) => {
     );
     
     res.json(updatedTodo[0]);
+
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
@@ -80,6 +86,7 @@ router.delete('/:id', async (req, res) => {
     }
 
     res.json({ message: "Todo deleted successfully", id });
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
