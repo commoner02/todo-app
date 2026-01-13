@@ -1,4 +1,5 @@
 import mysql from "mysql2/promise";
+import 'dotenv/config'
 
 async function setupDB() {
   try {
@@ -9,9 +10,11 @@ async function setupDB() {
       password: process.env.db_password,
     });
 
-    await connection.query(`CREATE DATABASE IF NOT EXISTS todo_app_2`);
+    const dbName = process.env.db_name;
 
-    await connection.query(`USE todo_app_2`);
+    await connection.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
+
+    await connection.query(`USE ${dbName}`);
 
     await connection.query(`CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +37,7 @@ async function setupDB() {
     await connection.query(`CREATE TABLE IF NOT EXISTS refresh_tokens(
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
-        token VARCHAR(5000) UNIQUE NOT NULL,
+        token VARCHAR(500) UNIQUE NOT NULL,
         expires_at DATETIME NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -43,10 +46,12 @@ async function setupDB() {
     console.log("Database and Tables created!");
 
     await connection.end();
-
   } catch (error) {
     console.log("DB Setup Error:", error.message);
   }
 }
 
 setupDB();
+
+// export db_host=localhost db_port=3306 db_user=root db_password=""
+// node ./config/db-setup.js

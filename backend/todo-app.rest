@@ -21,7 +21,7 @@ POST http://localhost:5005/auth/logout HTTP/1.1
 Content-Type: application/json 
 
 {
-    "refreshToken": "00845f7cffa00741ef4a702227f45a40697677d2653e514bcc453d483b94573807e243c5841cfece0a80c9232089d240b43a5f6f88e5030c01a5dcc217a1e422"
+    "refreshToken": "12fc505edb4e448b5a3fa8d3f91fe519d0930f0a115556e68c2ef9863877a5a962f736f9195eca3d7b7eee6234930316dcacb18fbb1706b462b24b04b42bdbce"
 
 }
 
@@ -30,7 +30,7 @@ POST http://localhost:5005/auth/refresh HTTP/1.1
 Content-Type: application/json
 
 {
-    "refreshToken": "8262e87699e44dc89e50e0fc665a35b614b8c490aad880722d9bf7f794f647536c5c674038dff8fe13b81babe07f03134c1e6eb576be490e9ce750e656736134"
+    "refreshToken": "12fc505edb4e448b5a3fa8d3f91fe519d0930f0a115556e68c2ef9863877a5a962f736f9195eca3d7b7eee6234930316dcacb18fbb1706b462b24b04b42bdbce"
 }
 
 ### Get Todos (with access token)

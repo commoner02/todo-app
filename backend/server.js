@@ -1,19 +1,17 @@
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import "dotenv/config";
 import authRoutes from "./routes/authRoutes.js";
 import todoRoutes from "./routes/todoRoutes.js";
-import authMiddleware from "./middleware/authMiddleware.js";
-import cors from "cors";
-import cookieParser from "cookie-parser"
-import "dotenv/config";
 
 const app = express();
 const PORT = process.env.PORT || 5005;
 const allowedOrigin = process.env.CORS_ORIGINS;
+console.log("Allowed Origin:", allowedOrigin);
 
+app.use(cookieParser());
 app.use(express.json());
-
-app.use(cookieParser())
-
 app.use(
   cors({
     origin: allowedOrigin,
@@ -23,8 +21,12 @@ app.use(
   })
 );
 
-app.use("/auth", authRoutes);
-app.use("/todos", authMiddleware, todoRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/todos", todoRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", message: "Server is running" });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);

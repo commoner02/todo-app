@@ -2,6 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const API_BASE = import.meta.env.VITE_API_URL
 
+const refreshToken = async () => {
+  try {
+    const response = await fetch(`${API_BASE}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (response.ok) {
+      console.log('new access token generated using refresh token');
+      return true;
+    }
+    throw new Error('Failed to refresh token');
+
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return false;
+  }
+}
 
 function Dashboard() {
   const [todos, setTodos] = useState([]);
@@ -17,26 +35,46 @@ function Dashboard() {
 
   const fetchTodos = async () => {
     try {
-      const token = localStorage.getItem('token');
-
-      const response = await fetch('/api/todos', {
+      console.log("fetching todos..")
+      let response = await fetch(`${API_BASE}/todos`, {
         method: 'GET',
         credentials: 'include',
         headers: {
-          Authorization: token,
           'Content-Type': 'application/json'
         }
       });
 
-      // Basic check: If fetch failed, return an empty array (simple error handling)
-      if (!response.ok) {
-        console.error("Failed to fetch todos:", response.status);
-        return;
+      await refreshToken();
+
+      if (response.status === 401) {
+        console.log("401 error")
+        if (response.code == "NO_ACCESS_TOKEN" || response.code === "TOKEN_EXPIRED") {
+          console.log("no access token or token expired")
+          const refreshed = await refreshToken();
+          if (refreshed) {
+            response = await fetch(`${API_BASE}/todos`, {
+              method: 'GET',
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+          }
+        }
+        else {
+          navigate('/auth');
+          return;
+        }
       }
 
+      if (!response.ok) {
+        console.log("failed to fetch todos", response.status)
+        return;
+      }
       const data = await response.json();
       setTodos(data);
       console.log(data)
+
 
     } catch (err) {
       console.error("Fetch error:", err);
@@ -81,3 +119,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

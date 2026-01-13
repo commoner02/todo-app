@@ -36,9 +36,7 @@ function AuthPage() {
       }),
     })
 
-    const data = await res.json()
-
-    const {accessToken, refreshToken} = data;
+    const {accessToken, refreshToken} = await res.json();
     console.log(accessToken, refreshToken)
      
     if (accessToken) {
