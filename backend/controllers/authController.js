@@ -56,7 +56,7 @@ const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ message: "logged in successfully" , accessToken });
+    res.json({ message: "logged in successfully", accessToken });
   } catch (error) {
     res.status(401).json({ message: "not authorized", error: error.message });
   }
@@ -65,7 +65,7 @@ const login = async (req, res) => {
 const refresh = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    console.log("refresh api hitted")
+    console.log("refresh api hitted");
 
     if (!refreshToken) {
       return res.status(401).json({ message: "no refresh token" });
@@ -92,30 +92,56 @@ const refresh = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  try {
+    const { username, newPassword } = req.body;
+
+    const user = await User.findByUsername(username);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    
+    const updated = await User.updatePassword(username, newPassword); 
+    if (updated) {
+      await Token.deleteByUserId(user.id);
+    }
+    if (!updated) {
+      return res.status(500).json({ message: "could not update password" });
+    }
+    res.json({ message: "password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "server error", error: error.message });
+  }
+};
+
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" , error: error.message});
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-const logout = async(req, res) => {
+const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
-    if (refreshToken) {
-      await Token.delete(refreshToken);
+    if (!refreshToken) {
+      return res.status(400).json({ message: "No refresh token provided" });
     }
-    
-    res.clearCookie('accessToken')
-    res.clearCookie('refreshToken')
-    res.json({ message: "logged out successfully" });
-    
-  } catch (error) {
-    return res.status(500).json({ message: "server error", error: error.message });
-  }
-}
 
-export { register, login, refresh, getMe, logout };
+    const result = await Token.delete(refreshToken);
+    console.log("Refresh token deleted:", result);
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ message: "logged out successfully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "server error", error: error.message });
+  }
+};
+
+export { register, login, refresh, resetPassword, getMe, logout };

@@ -3,6 +3,7 @@ import Todo from "../models/Todo.js";
 const getTodos = async (req, res) => {
   try {
     const todos = await Todo.findByUser(req.userId);
+    console.log("api hit in server")
     res.json(todos);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -24,12 +25,30 @@ const createTodo = async (req, res) => {
   }
 };
 
+const toggleTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { completed } = req.body;
+    
+    const success = await Todo.toggle(id, req.userId, completed);
+    if (!success) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    const todo_ = await Todo.findById(id, req.userId);
+    res.json(todo_);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
 const updateTodo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { todo, completed } = req.body;
+    const { todo } = req.body;
 
-    const success = await Todo.update(id, req.userId, { todo, completed });
+    const success = await Todo.update(id, req.userId, { todo });
 
     if (!success) {
       return res.status(404).json({ message: "Todo not found" });
@@ -57,4 +76,4 @@ const deleteTodo = async (req, res) => {
   }
 };
 
-export { getTodos, createTodo, updateTodo, deleteTodo };
+export { getTodos, createTodo, updateTodo, deleteTodo, toggleTodo };

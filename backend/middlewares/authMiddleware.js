@@ -25,8 +25,8 @@ const protect = (req, res, next) => {
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
-        error: "Token expired",
-        code: "TOKEN_EXPIRED",
+        error: "Access Token expired",
+        code: "ACCESSS_TOKEN_EXPIRED",
         shouldRefresh: !!refreshToken,
       });
     }
