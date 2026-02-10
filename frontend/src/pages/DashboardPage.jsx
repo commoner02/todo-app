@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LogOut, Plus, CheckCircle, ListTodo } from "lucide-react";
+import { LogOut, Plus, CheckCircle } from "lucide-react";
 import { showToast } from "../lib/toast";
 
 const Dashboard = () => {
@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [loading, setLoading] = useState(false);
-  const [filter, setFilter] = useState("all"); // "all", "active", "completed"
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     loadTodos();
@@ -30,7 +30,7 @@ const Dashboard = () => {
     try {
       const res = await todosAPI.getAll();
       setTodos(res.data);
-    } catch (error) {
+    } catch {
       showToast.error("Failed to load todos");
     } finally {
       setLoading(false);
@@ -48,7 +48,7 @@ const Dashboard = () => {
       setTodos([res.data, ...todos]);
       setNewTodo("");
       showToast.success("Todo added");
-    } catch (error) {
+    } catch {
       showToast.error("Failed to add todo");
     }
   };
@@ -58,7 +58,7 @@ const Dashboard = () => {
       const res = await todosAPI.toggle(id, completed);
       setTodos(todos.map((todo) => (todo.id === id ? res.data : todo)));
       showToast.success("Todo updated");
-    } catch (error) {
+    } catch {
       showToast.error("Failed to update todo");
     }
   };
@@ -68,7 +68,7 @@ const Dashboard = () => {
       const res = await todosAPI.update(id, todoText);
       setTodos(todos.map((todo) => (todo.id === id ? res.data : todo)));
       showToast.success("Todo updated");
-    } catch (error) {
+    } catch {
       showToast.error("Failed to update todo");
     }
   };
@@ -78,7 +78,7 @@ const Dashboard = () => {
       await todosAPI.delete(id);
       setTodos(todos.filter((todo) => todo.id !== id));
       showToast.success("Todo deleted");
-    } catch (error) {
+    } catch {
       showToast.error("Failed to delete todo");
     }
   };
@@ -86,7 +86,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await logout();
-    } catch (error) {
+    } catch {
       showToast.error("Failed to logout");
     }
   };
@@ -105,10 +105,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen pb-20 bg-gray-50 p-4 md:p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800"><span className="bg-rose-500 text-white px-1 py-1 rounded">Todo</span>ist</h1>
+            <h1 className="text-3xl font-bold text-gray-800">
+              <span className="bg-rose-500 text-white px-1 py-1 rounded">
+                Todo
+              </span>
+              ist
+            </h1>
             <p className="text-base text-gray-600 mt-1">
               Welcome, <span className="font-medium">{user?.username}</span>
             </p>
@@ -126,9 +130,7 @@ const Dashboard = () => {
 
         <hr className="border-gray-200 mb-6" />
 
-        {/* Add Todo & Overview Section - Side by side */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-          {/* Add Todo Card */}
           <Card className="lg:col-span-2">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Add New Todo</CardTitle>
@@ -152,7 +154,6 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Overview Card */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-lg">Overview</CardTitle>
@@ -180,7 +181,6 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Todo List Section */}
         <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -193,7 +193,6 @@ const Dashboard = () => {
                 </CardDescription>
               </div>
 
-              {/* Filter Buttons */}
               <div className="flex gap-2">
                 <Button
                   variant={filter === "all" ? "default" : "outline"}
@@ -273,7 +272,6 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        {/* Stats Footer */}
         <div className="mt-4 text-center text-xs text-gray-500">
           {todos.length > 0 && (
             <div className="mb-2">
@@ -295,16 +293,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-      {/* Sticky Footer */}
-      <footer className="fixed bottom-0 left-0 w-full py-3">
-        <div className="max-w-4xl mx-auto">
-          <hr className="border-gray-200 mb-3" />
-          <div className="text-center text-sm text-gray-600">
-            Made with ❤️ by Shuvo | {new Date().getFullYear()}
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

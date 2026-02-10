@@ -74,7 +74,7 @@ const ForgotPassword = () => {
         </CardContent>
         <CardFooter className="flex-col gap-2">
           <Button type="submit" onClick={handleSubmit} className="w-full bg-primary text-white hover:bg-primary/90">
-            Login
+            Reset Password
           </Button>
           <div className="text-sm text-center text-muted-foreground">
             Remembered Password?{" "}

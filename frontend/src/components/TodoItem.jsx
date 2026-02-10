@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, X, Edit2, Trash2 } from "lucide-react";
+import { Check, Edit2, Trash2 } from "lucide-react";
 
 const TodoItem = ({ todo, onToggle, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -30,10 +30,9 @@ const TodoItem = ({ todo, onToggle, onUpdate, onDelete }) => {
           : "bg-white border-gray-200"
       }`}
     >
-      {/* Toggle Checkbox */}
       <button
         onClick={() => onToggle(todo.id, !todo.completed)}
-        className={`flex-shrink-0 h-5 w-5 rounded border flex items-center justify-center ${
+        className={`shrink-0 h-5 w-5 rounded border flex items-center justify-center ${
           todo.completed
             ? "bg-rose-500 border-rose-500"
             : "border-gray-300 hover:border-rose-400"
@@ -42,7 +41,6 @@ const TodoItem = ({ todo, onToggle, onUpdate, onDelete }) => {
         {todo.completed && <Check className="h-3 w-3 text-white" />}
       </button>
 
-      {/* Todo Content */}
       <div className="flex-1 min-w-0">
         {isEditing ? (
           <div className="flex gap-2">

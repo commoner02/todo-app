@@ -117,7 +117,8 @@ const resetPassword = async (req, res) => {
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
-    res.json(user);
+    const { password, ...safeUser } = user;
+    res.json(safeUser);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
