@@ -130,13 +130,13 @@ const Dashboard = () => {
 
         <hr className="border-gray-200 mb-6" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
           <Card className="lg:col-span-2">
-            <CardHeader className="pb-3">
+            <CardHeader>
               <CardTitle className="text-lg">Add New Todo</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-1">
                 <Input
                   value={newTodo}
                   onChange={(e) => setNewTodo(e.target.value)}
@@ -155,11 +155,11 @@ const Dashboard = () => {
           </Card>
 
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader>
               <CardTitle className="text-lg">Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Total</span>
                   <span className="font-medium">{todos.length}</span>
