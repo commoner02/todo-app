@@ -8,19 +8,18 @@ import todoRoutes from "./routes/todoRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5005;
 
-const allowedOrigin =
-  process.env.CORS_ORIGINS || "http://localhost:5173";
+const allowedOrigin = process.env.CORS_ORIGINS || "http://localhost:5173";
 
-app.use(cookieParser());
-app.use(express.json());
 app.use(
   cors({
     origin: allowedOrigin,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   }),
 );
+
+app.use(cookieParser());
+app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
@@ -41,8 +40,8 @@ app.use((err, req, res, next) => {
 export default app;
 
 if (process.env.VERCEL !== "1") {
-  const PORT = process.env.PORT || 5005;
   app.listen(PORT, () => {
     console.log(`Server running locally on port ${PORT}`);
   });
 }
+
