@@ -36,7 +36,6 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "username not found" });
     }
-    //console.log(user);
 
     const isPasswordValid = await User.comparePassword(password, user.password);
     if (!isPasswordValid) {
@@ -46,25 +45,29 @@ const login = async (req, res) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = await generateRefreshToken(user.id);
 
-    res.cookie("accessToken", accessToken, {
+    // ✅ FIX: Add domain and remove partitioned for now
+    const cookieOptions = {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      partitioned: true,
-      maxAge: 15 * 60 * 1000,
+      domain: ".vercel.app", // ✅ CRITICAL: Wildcard domain for all subdomains
       path: "/",
+    };
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60 * 1000,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      partitioned: true,
+      ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/",
     });
 
-    res.json({ message: "logged in successfully", accessToken });
+    res.json({
+      message: "logged in successfully",
+      user: { id: user.id, username: user.username }, // Return user info
+    });
   } catch (error) {
     res.status(401).json({ message: "not authorized", error: error.message });
   }
@@ -80,7 +83,6 @@ const refresh = async (req, res) => {
     }
 
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-
     const validToken = await Token.isValid(refreshToken);
 
     if (!validToken) {
@@ -93,9 +95,9 @@ const refresh = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
+      domain: ".vercel.app", // ✅ Add domain
       maxAge: 15 * 60 * 1000,
       path: "/",
-      partitioned: true,
     });
 
     res.json({ accessToken });
@@ -140,18 +142,15 @@ const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
-    if (!refreshToken) {
-      return res.status(400).json({ message: "No refresh token provided" });
+    if (refreshToken) {
+      await Token.delete(refreshToken);
     }
-
-    const result = await Token.delete(refreshToken);
-    console.log("Refresh token deleted:", result);
 
     res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      partitioned: true,
+      domain: ".vercel.app", // ✅ Add domain
       path: "/",
     });
 
@@ -159,7 +158,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      partitioned: true,
+      domain: ".vercel.app", // ✅ Add domain
       path: "/",
     });
 
@@ -170,5 +169,4 @@ const logout = async (req, res) => {
       .json({ message: "server error", error: error.message });
   }
 };
-
 export { register, login, refresh, resetPassword, getMe, logout };
