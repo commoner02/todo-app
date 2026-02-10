@@ -48,12 +48,18 @@ const login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     res.json({ message: "logged in successfully", accessToken });
@@ -83,7 +89,10 @@ const refresh = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.json({ accessToken });
@@ -100,8 +109,8 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "user not found" });
     }
-    
-    const updated = await User.updatePassword(username, newPassword); 
+
+    const updated = await User.updatePassword(username, newPassword);
     if (updated) {
       await Token.deleteByUserId(user.id);
     }
@@ -135,8 +144,18 @@ const logout = async (req, res) => {
     const result = await Token.delete(refreshToken);
     console.log("Refresh token deleted:", result);
 
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+    });
+
     res.json({ message: "logged out successfully" });
   } catch (error) {
     return res
