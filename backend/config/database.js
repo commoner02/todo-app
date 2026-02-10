@@ -1,8 +1,6 @@
 import mysql from "mysql2/promise";
 import fs from "fs";
 
-const caCert = fs.readFileSync("./config/ca.pem");
-
 const pool = mysql.createPool({
   host: process.env.db_host,
   port: process.env.db_port,
