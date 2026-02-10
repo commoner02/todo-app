@@ -48,16 +48,18 @@ const login = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
+      partitioned: true,
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
+      partitioned: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
@@ -89,10 +91,11 @@ const refresh = async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
       maxAge: 15 * 60 * 1000,
       path: "/",
+      partitioned: true,
     });
 
     res.json({ accessToken });
@@ -146,14 +149,18 @@ const logout = async (req, res) => {
 
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
+      partitioned: true,
+      path: "/",
     });
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "none",
+      partitioned: true,
+      path: "/",
     });
 
     res.json({ message: "logged out successfully" });
