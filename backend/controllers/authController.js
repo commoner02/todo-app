@@ -49,7 +49,7 @@ const login = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "vercel.app",
+      domain: ".vercel.app",
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
@@ -58,7 +58,7 @@ const login = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "vercel.app",
+      domain: ".vercel.app",
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: "/",
     });
@@ -94,7 +94,7 @@ const refresh = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "vercel.app",
+      domain: ".vercel.app",
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
@@ -149,7 +149,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "vercel.app",
+      domain: ".vercel.app",
       path: "/",
     });
 
@@ -157,7 +157,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: "vercel.app",
+      domain: ".vercel.app",
       path: "/",
     });
 
