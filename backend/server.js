@@ -10,20 +10,17 @@ const PORT = process.env.PORT || 5005;
 
 const allowedOrigin =
   process.env.NODE_ENV === "production"
-    ? [process.env.CORS_ORIGINS, process.env.FRONTEND_URL].filter(Boolean)
+    ? process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(",")
+      : []
     : ["http://localhost:5173"];
+
 
 app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigin.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigin,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -48,8 +45,9 @@ app.use((err, req, res, next) => {
 
 export default app;
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.VERCEL !== "1") {
+  const PORT = process.env.PORT || 5005;
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running locally on port ${PORT}`);
   });
 }
