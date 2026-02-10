@@ -45,23 +45,22 @@ const login = async (req, res) => {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = await generateRefreshToken(user.id);
 
-    // ✅ FIX: Add domain and remove partitioned for now
-    const cookieOptions = {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: ".vercel.app", // ✅ CRITICAL: Wildcard domain for all subdomains
-      path: "/",
-    };
-
-    res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
+      domain: "vercel.app",
       maxAge: 15 * 60 * 1000,
+      path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      domain: "vercel.app",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
 
     res.json({
@@ -95,7 +94,7 @@ const refresh = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: ".vercel.app", // ✅ Add domain
+      domain: "vercel.app",
       maxAge: 15 * 60 * 1000,
       path: "/",
     });
@@ -150,7 +149,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: ".vercel.app", // ✅ Add domain
+      domain: "vercel.app",
       path: "/",
     });
 
@@ -158,7 +157,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      domain: ".vercel.app", // ✅ Add domain
+      domain: "vercel.app",
       path: "/",
     });
 
