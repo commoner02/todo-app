@@ -9,12 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5005;
 
 const allowedOrigin =
-  process.env.NODE_ENV === "production"
-    ? process.env.CORS_ORIGINS
-      ? process.env.CORS_ORIGINS.split(",")
-      : []
-    : ["http://localhost:5173"];
-
+  process.env.CORS_ORIGINS || "http://localhost:5173";
 
 app.use(cookieParser());
 app.use(express.json());

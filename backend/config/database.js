@@ -1,5 +1,4 @@
 import mysql from "mysql2/promise";
-import fs from "fs";
 
 const pool = mysql.createPool({
   host: process.env.db_host,
@@ -9,10 +8,10 @@ const pool = mysql.createPool({
   database: process.env.db_name,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0, 
+  queueLimit: 0,
   ssl: {
     rejectUnauthorized: false,
-  }
+  },
 });
 
 console.log("DB Connected to:", process.env.db_name);
