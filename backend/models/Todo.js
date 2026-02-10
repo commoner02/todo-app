@@ -28,10 +28,18 @@ console.log("Finding todo by ID for user:", userId);
   }
 
   static async update(id, userId, data) {
-    const { todo, completed } = data;
+    const { todo } = data;
     const [result] = await pool.execute(
-      "UPDATE todos SET todo = ?, completed = ? WHERE id = ? AND user_id = ?",
-      [todo, completed, id, userId]
+      "UPDATE todos SET todo = ? WHERE id = ? AND user_id = ?",
+      [todo, id, userId]
+    );
+    return result.affectedRows > 0;
+  }
+
+  static async toggle(id, userId, completed) {
+    const [result] = await pool.execute(
+      "UPDATE todos SET completed = ? WHERE id = ? AND user_id = ?",
+      [completed, id, userId]
     );
     return result.affectedRows > 0;
   }

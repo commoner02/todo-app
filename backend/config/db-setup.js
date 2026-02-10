@@ -8,13 +8,11 @@ async function setupDB() {
       port: process.env.db_port,
       user: process.env.db_user,
       password: process.env.db_password,
+      database: process.env.db_name,
+      ssl: { rejectUnauthorized: false }
     });
 
-    const dbName = process.env.db_name;
-
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
-
-    await connection.query(`USE ${dbName}`);
+    console.log("Connected to Aiven MySQL");
 
     await connection.query(`CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -43,15 +41,11 @@ async function setupDB() {
         FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     )`);
 
-    console.log("Database and Tables created!");
-
+    console.log("Tables created successfully!");
     await connection.end();
   } catch (error) {
-    console.log("DB Setup Error:", error.message);
+    console.error("Setup error:", error.message);
   }
 }
 
 setupDB();
-
-// export db_host=localhost db_port=3306 db_user=root db_password=""
-// node ./config/db-setup.js

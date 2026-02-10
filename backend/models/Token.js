@@ -16,6 +16,14 @@ class Token {
     return result.affectedRows > 0;
   }
 
+  static async deleteByUserId(userId) {
+    const [result] = await pool.execute(
+      'DELETE FROM refresh_tokens WHERE user_id = ?',
+      [userId]
+    );
+    return result.affectedRows > 0;
+  }
+
   static async delete(token) {
     const [result] = await pool.execute(
       'DELETE FROM refresh_tokens WHERE token = ?',

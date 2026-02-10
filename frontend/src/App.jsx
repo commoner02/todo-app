@@ -1,23 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router"
-import AuthPage from "./AuthPage.jsx"
-import Dashboard from "./Dashboard"
-import Test from "./TestApp"
-//import { authAPI } from "./api.js"
+import { BrowserRouter, Routes, Route } from "react-router"
+import Login from './pages/LoginPage'
+import Register from './pages/RegisterPage'
+import Dashboard from './pages/DashboardPage'
+import ForgotPassword from './pages/ForgotPasswordPage'
+import ProtectedRoute from "./router/ProtectedRoutes"
+import {AuthProvider} from "./auth/AuthContext"
+import ToastProvider from "./components/ToastProvider"
 
 function App() {
-  // Check authentication status
-  //const isAuthenticated = authAPI.isAuthenticated()
-
   return (
     <BrowserRouter>
-      <Routes>
-        {/* <Route path="/" element={<Navigate to={isAuthenticated ? "/todos" : "/auth"} />} /> */}
-        <Route path="/" element={<AuthPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/todos" element={<Dashboard />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="*" element={<div>404 - Not Found</div>} />
-      </Routes>
+      <AuthProvider>
+        <ToastProvider />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="*" element={<div>404 - Not Found</div>} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

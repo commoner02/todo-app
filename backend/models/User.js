@@ -30,6 +30,15 @@ class User {
   static async comparePassword(password, hashedPassword) {
     return await bcrypt.compare(password, hashedPassword);
   }
+
+  static async updatePassword(username, newPassword) {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const [result] = await pool.execute(
+      "UPDATE users SET password = ? WHERE username = ?",
+      [hashedPassword, username]
+    );
+    return result.affectedRows > 0;
+  }
 }
 
 export default User;

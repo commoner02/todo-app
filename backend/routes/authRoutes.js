@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { register, login, refresh, getMe, logout } from '../controllers/authController.js'
+import { register, login, refresh,resetPassword, getMe, logout } from '../controllers/authController.js'
 import protect from "../middlewares/authMiddleware.js";
 
 //console.log(router);
@@ -8,6 +8,7 @@ import protect from "../middlewares/authMiddleware.js";
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout)
+router.post("/reset-password", resetPassword);
 
 router.post("/refresh", refresh);
 router.get("/me", protect, getMe);
