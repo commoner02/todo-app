@@ -12,6 +12,7 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     //console.log(originalRequest);
+
     if (
       error.response?.status === 401 &&
       error.response?.data?.shouldRefresh &&
@@ -21,7 +22,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/api/auth/refresh");
+        await api.post("/auth/refresh");
         return api(originalRequest);
       } catch (error) {
         console.log("Token Refresh Failed:", error.message);
@@ -29,7 +30,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
