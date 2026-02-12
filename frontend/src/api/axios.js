@@ -22,7 +22,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        await api.post("/auth/refresh");
+        await api.post("/api/auth/refresh");
         return api(originalRequest);
       } catch (error) {
         console.log("Token Refresh Failed:", error.message);
