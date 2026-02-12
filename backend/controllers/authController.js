@@ -129,8 +129,8 @@ const getMe = async (req, res) => {
     const user = await User.findById(req.userId);
     const { password, ...safeUser } = user;
     res.json(safeUser);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+  } catch {
+   
   }
 };
 

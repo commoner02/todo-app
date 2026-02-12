@@ -3,33 +3,33 @@ import api from "./axios";
 // Auth API calls
 const authAPI = {
   register: (username, password) =>
-    api.post("/api/auth/register", { username, password }),
+    api.post("/auth/register", { username, password }),
 
   login: (username, password) =>
-    api.post("/api/auth/login", { username, password }),
+    api.post("/auth/login", { username, password }),
 
   resetPassword: (username, newPassword) =>
-    api.post("/api/auth/reset-password", { username, newPassword }),
+    api.post("/auth/reset-password", { username, newPassword }),
 
-  logout: () => api.post("/api/auth/logout"),
+  logout: () => api.post("/auth/logout"),
 
-  refresh: () => api.post("/api/auth/refresh"),
+  refresh: () => api.post("/auth/refresh"),
 
-  getMe: () => api.get("/api/auth/me"),
+  getMe: () => api.get("/auth/me"),
 };
 
 // Todos API calls
 const todosAPI = {
-  getAll: () => api.get("/api/todos"),
+  getAll: () => api.get("/todos"),
 
   create: (todo, completed = false) =>
-    api.post("/api/todos", { todo, completed }),
+    api.post("/todos", { todo, completed }),
 
-  update: (id, todo) => api.put(`/api/todos/${id}`, { todo }),
+  update: (id, todo) => api.put(`/todos/${id}`, { todo }),
 
-  toggle: (id, completed) => api.put(`/api/todos/${id}/toggle`, { completed }),
+  toggle: (id, completed) => api.put(`/todos/${id}/toggle`, { completed }),
 
-  delete: (id) => api.delete(`/api/todos/${id}`),
+  delete: (id) => api.delete(`/todos/${id}`),
 };
 
 export { authAPI, todosAPI };

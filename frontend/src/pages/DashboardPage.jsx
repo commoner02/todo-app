@@ -273,24 +273,7 @@ const Dashboard = () => {
         </Card>
 
         <div className="mt-4 text-center text-xs text-gray-500">
-          {todos.length > 0 && (
-            <div className="mb-2">
-              <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden max-w-xs mx-auto">
-                <div
-                  className="h-full bg-green-500"
-                  style={{
-                    width: `${(completedCount / todos.length) * 100}%`,
-                  }}
-                />
-              </div>
-              <div className="mt-1">
-                {Math.round((completedCount / todos.length) * 100)}% complete
-              </div>
-            </div>
-          )}
-          <div>
-            {activeCount} left • {completedCount} done
-          </div>
+          &copy; {new Date().getFullYear()} Todoist. All rights reserved.
         </div>
       </div>
     </div>
